@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>کنکور علیرضا — آزمون آنلاین کنکور تجربی</title>
+<meta name="description" content="سامانه آزمون آنلاین کنکور علیرضا؛ تمرین کنکور برای دانش‌آموزان دهم تا دوازدهم رشته تجربی">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234338ca'/%3E%3Ctext x='32' y='44' font-size='36' font-family='Tahoma' fill='white' text-anchor='middle' font-weight='bold'%3Eک%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" data-view="home" href="#">
+      <span class="brand-mark">ک</span>
+      <span class="brand-text">کنکور <b>علیرضا</b><small>آزمون آنلاین کنکور تجربی</small></span>
+    </a>
+    <nav class="mainnav">
+      <a class="navlink" data-view="home" href="#">خانه</a>
+      <a class="navlink" data-view="history" href="#">نتایج</a>
+      <a class="navlink" data-view="bank" href="#">بانک سؤال (معلم)</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ خانه / شروع آزمون ============ -->
+  <section id="view-home" class="view">
+    <div class="hero">
+      <h1>آزمون آنلاین کنکور علیرضا 🎓</h1>
+      <p>با سؤالات چهارگزینه‌ای مباحث کنکور سال‌های دهم تا دوازدهم رشته‌ی تجربی، خودت رو بسن. زمان‌دار، با امتیازدهی دقیق کنکور و پاسخ‌نامه‌ی کامل.</p>
+      <div class="hero-stats">
+        <span class="hero-stat">📚 بانک سؤالات: <b id="stat-total">۰</b> سؤال</span>
+        <span class="hero-stat">⏱ زمان‌دار</span>
+        <span class="hero-stat">📊 پاسخ‌نامه با توضیح</span>
+      </div>
+    </div>
+
+    <div class="card setup">
+      <h2>شروع آزمون</h2>
+      <form id="start-form">
+        <div class="form-grid">
+          <div class="field">
+            <label for="set-name">نام دانش‌آموز (اختیاری)</label>
+            <input type="text" id="set-name" placeholder="مثلاً: علی محمدی" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="set-subject">درس</label>
+            <select id="set-subject"></select>
+          </div>
+          <div class="field">
+            <label for="set-grade">سال تحصیلی</label>
+            <select id="set-grade"></select>
+          </div>
+          <div class="field">
+            <label for="set-count">تعداد سؤالات</label>
+            <select id="set-count"></select>
+            <small class="note" id="set-count-note"></small>
+          </div>
+          <div class="field">
+            <label for="set-time">زمان برای هر سؤال</label>
+            <select id="set-time">
+              <option value="60">۱ دقیقه (استاندارد)</option>
+              <option value="90">۹۰ ثانیه (سخت‌تر)</option>
+              <option value="120">۲ دقیقه (آسوده‌تر)</option>
+            </select>
+            <small class="note" id="time-total"></small>
+          </div>
+          <div class="field">
+            <label class="checkline"><input type="checkbox" id="set-negative" checked> اعمال منفی برای پاسخ غلط (مانند کنکور: هر غلط −۰٫۷۵)</label>
+          </div>
+        </div>
+        <button type="submit" class="btn primary big" id="btn-start">🚀 شروع آزمون</button>
+      </form>
+    </div>
+
+    <div class="card about">
+      <h3>نحوه‌ی امتیازدهی</h3>
+      <ul class="score-rules">
+        <li>✅ هر پاسخ درست: <b>۳+</b> امتیاز</li>
+        <li>❌ هر پاسخ غلط (در صورت فعال بودن): <b>−۰٫۷۵</b></li>
+        <li>⬜ پاسخ ندادن: بدون تنهک</li>
+      </ul>
+      <p class="tip">💡 هنگام آزمون می‌توانید با کلیدهای ۱ تا ۴ روی کیبورد گزینه را انتخاب کنید و با دکمه‌ی «علامت‌گذاری» سؤال را برای بررسی بعدی علامت بزنید.</p>
+      <div class="chips" id="subject-chips"></div>
+    </div>
+  </section>
+
+  <!-- ============ آزمون ============ -->
+  <section id="view-exam" class="view">
+    <div class="card exam-top">
+      <div>
+        <div class="exam-title" id="ex-title">—</div>
+        <div class="exam-progress" id="ex-progress"></div>
+      </div>
+      <div class="timer" id="timer" dir="ltr">00:00</div>
+    </div>
+
+    <div class="card exam-card">
+      <div class="q-meta">
+        <span class="q-num" id="q-num"></span>
+        <span class="q-subject" id="q-subject"></span>
+      </div>
+      <p class="q-text" id="q-text"></p>
+      <div class="q-options" id="q-options"></div>
+    </div>
+
+    <div class="exam-actions">
+      <button type="button" class="btn" id="btn-prev">→ قبلی</button>
+      <button type="button" class="btn" id="btn-clear">پاک‌کردن پاسخ</button>
+      <button type="button" class="btn" id="btn-flag">◯ علامت‌گذاری</button>
+      <button type="button" class="btn" id="btn-next">بعدی ←</button>
+    </div>
+
+    <div class="card navgrid-card">
+      <div class="navgrid" id="q-nav"></div>
+    </div>
+
+    <button type="button" class="btn primary big" id="btn-submit">✅ پایان آزمون و مشاهده‌ی نتیجه</button>
+  </section>
+
+  <!-- ============ نتیجه ============ -->
+  <section id="view-result" class="view">
+    <div class="card result-hero">
+      <div class="res-head">
+        <div>
+          <h2 id="res-name"></h2>
+          <p class="res-meta" id="res-meta"></p>
+        </div>
+        <div class="res-percent"><b id="res-percent"></b><span>درصد</span></div>
+      </div>
+      <div class="res-score-row">
+        <div>
+          <span class="res-score-num" id="res-score"></span>
+          <span class="res-score-total" id="res-total"></span>
+        </div>
+        <div class="res-bar-wrap"><div class="res-bar" id="res-bar"></div></div>
+      </div>
+    </div>
+
+    <div class="mini-grid">
+      <div class="mini-card ok"><b id="stat-correct"></b><span>درست</span></div>
+      <div class="mini-card bad"><b id="stat-wrong"></b><span>غلط</span></div>
+      <div class="mini-card"><b id="stat-blank"></b><span>بی‌پاسخ</span></div>
+      <div class="mini-card"><b id="stat-penalty"></b><span>تنهک</span></div>
+    </div>
+
+    <div class="result-actions">
+      <button type="button" class="btn" id="btn-copy">📋 کپی نتیجه</button>
+      <button type="button" class="btn primary" id="btn-result-home">🏠 آزمون جدید</button>
+    </div>
+
+    <h2 class="section-title">📖 پاسخ‌نامه</h2>
+    <div id="review-list"></div>
+  </section>
+
+  <!-- ============ بانک سؤال (معلم) ============ -->
+  <section id="view-bank" class="view">
+    <div class="hero small">
+      <h1>بانک سؤالات 🧩</h1>
+      <p>بخش مخصوص معلم: سؤال جدید به بانک اضافه کنید، خروجی بگیرید یا از جای دیگری وارد کنید. سؤال‌های اضافه‌شده در مرورگر همین دستگاه ذخیره می‌شوند.</p>
+    </div>
+
+    <div class="card">
+      <h2>افزودن سؤال جدید</h2>
+      <form id="bank-form">
+        <div class="form-grid">
+          <div class="field">
+            <label for="bf-subject">درس</label>
+            <select id="bf-subject"></select>
+          </div>
+          <div class="field">
+            <label for="bf-grade">سال تحصیلی</label>
+            <select id="bf-grade"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="bf-q">متن سؤال</label>
+          <textarea id="bf-q" rows="2" placeholder="متن سؤال را بنویسید…"></textarea>
+        </div>
+        <div class="opts-form">
+          <div class="field"><label for="bf-opt0">گزینه‌ی الف</label><input type="text" id="bf-opt0"></div>
+          <div class="field"><label for="bf-opt1">گزینه‌ی ب</label><input type="text" id="bf-opt1"></div>
+          <div class="field"><label for="bf-opt2">گزینه‌ی ج</label><input type="text" id="bf-opt2"></div>
+          <div class="field"><label for="bf-opt3">گزینه‌ی د</label><input type="text" id="bf-opt3"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="bf-ans">گزینه‌ی صحیح</label>
+            <select id="bf-ans">
+              <option value="0" selected>الف</option>
+              <option value="1">ب</option>
+              <option value="2">ج</option>
+              <option value="3">د</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="bf-explain">توضیح (اختیاری، نمایش داده می‌شود در پاسخ‌نامه)</label>
+            <input type="text" id="bf-explain" placeholder="مثلاً: چون h = ½gt² …">
+          </div>
+        </div>
+        <button type="submit" class="btn primary">➕ افزودن به بانک</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-head-row">
+        <h2>سؤال‌های اضافه‌شده‌ی شما (<span id="bank-count">۰</span>)</h2>
+        <div class="card-head-actions">
+          <button type="button" class="btn mini" id="btn-export">⬇ خروجی JSON</button>
+          <button type="button" class="btn mini" id="btn-import">⬆ واردکردن از فایل</button>
+          <input type="file" id="import-file" accept="application/json,.json" hidden>
+        </div>
+      </div>
+      <div id="bank-list"></div>
+    </div>
+  </section>
+
+  <!-- ============ نتایج ============ -->
+  <section id="view-history" class="view">
+    <div class="card">
+      <div class="card-head-row">
+        <h2>نتایج آزمون‌های اخیر</h2>
+        <button type="button" class="btn mini danger" id="btn-clear-history">پاک‌کردن همه</button>
+      </div>
+      <p class="tip">نتایج فقط روی همین مرورگر ذخیره می‌شوند. برای ارسال نتیجه به معلم، از دکمه‌ی «کپی نتیجه» در صفحه‌ی نتیجه استفاده کنید.</p>
+      <div id="history-list"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    کنکور علیرضا — ساخته‌شده برای تمرین کنکور تجربی · تمام داده‌ها روی دستگاه خودتان ذخیره می‌شوند و به هیچ سروری ارسال نمی‌شوند
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-card">
+    <h3 id="modal-title"></h3>
+    <div id="modal-body"></div>
+    <div class="modal-buttons" id="modal-buttons"></div>
+  </div>
+</div>
+
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
