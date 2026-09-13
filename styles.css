@@ -294,6 +294,11 @@ textarea{resize:vertical}
   width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;
   direction:ltr;text-align:left;border:1.5px solid var(--line);border-radius:10px;padding:10px;
 }
+.modal-card input[type=password]{
+  width:100%;font-family:inherit;font-size:22px;letter-spacing:10px;text-align:center;
+  border:1.5px solid var(--line);border-radius:12px;padding:13px;margin-top:10px;background:#fbfcfe;color:var(--ink);
+}
+.modal-card input[type=password]:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(67,56,202,.13)}
 .modal-buttons{display:flex;gap:8px;justify-content:flex-start;margin-top:16px;flex-wrap:wrap}
 
 /* ---------- واکنش‌گرا ---------- */

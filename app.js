@@ -74,6 +74,45 @@ function toast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
 }
 
+/* ---------- رمز معلم ---------- */
+const TEACHER_CODE = String(window.TEACHER_CODE || '1395');
+let teacherAuthed = false;
+try { teacherAuthed = sessionStorage.getItem('ka_teacher_auth') === '1'; } catch (e) { /* ignore */ }
+
+function askCode(onOk) {
+  openModal('رمز معلم',
+    '<p class="modal-msg">این بخش مخصوص معلم است. کد معلم را وارد کنید:</p>' +
+    '<input type="password" id="code-input" dir="ltr" inputmode="numeric" autocomplete="off" placeholder="********">',
+    [
+      { label: 'تأیید', cls: 'primary', fn: () => {
+          const v = ($('#code-input') ? $('#code-input').value : '').trim();
+          if (v === TEACHER_CODE) {
+            teacherAuthed = true;
+            try { sessionStorage.setItem('ka_teacher_auth', '1'); } catch (e) { /* ignore */ }
+            closeModal();
+            toast('خوش آمدید، معلم ✓');
+            onOk();
+          } else {
+            toast('رمز اشتباه است');
+            const i = $('#code-input');
+            if (i) { i.value = ''; i.focus(); }
+          }
+        } },
+      { label: 'انصراف', fn: closeModal }
+    ]);
+  setTimeout(() => {
+    const i = $('#code-input');
+    if (!i) return;
+    i.focus();
+    i.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const ok = $$('#modal-buttons .btn.primary')[0];
+        if (ok) ok.click();
+      }
+    });
+  }, 80);
+}
+
 /* ---------- جابه‌جایی بین ویوها ---------- */
 function showView(name) {
   $$('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
@@ -85,6 +124,10 @@ function renderView(name) {
   if (name === 'history') renderHistory();
 }
 function navTo(name) {
+  if (name === 'bank' && !teacherAuthed) {
+    askCode(() => { showView('bank'); renderBank(); });
+    return;
+  }
   if (state.exam && name !== 'exam' && name !== 'result') {
     askConfirm('آزمون‌تان هنوز تمام نشده است. اگر خارج شوید، این آزمون لغو می‌شود.', () => {
       clearInterval(state.timerId);
@@ -535,11 +578,15 @@ $('#import-file').addEventListener('change', e => {
   e.target.value = '';
 });
 
-$('#btn-clear-history').onclick = () => askConfirm('همه‌ی نتایج پاک شود؟', () => {
-  saveHistory([]);
-  renderHistory();
-  toast('نتایج پاک شد');
-}, 'پاک‌کردن');
+$('#btn-clear-history').onclick = () => {
+  const doClear = () => askConfirm('همه‌ی نتایج پاک شود؟', () => {
+    saveHistory([]);
+    renderHistory();
+    toast('نتایج پاک شد');
+  }, 'پاک‌کردن');
+  if (teacherAuthed) doClear();
+  else askCode(doClear);
+};
 
 /* کلیدهای ۱ تا  برای انتخاب سریع گزینه */
 document.addEventListener('keydown', e => {
